@@ -1,25 +1,46 @@
-import logo from './logo.svg';
-import './App.css';
+import React from "react";
+import Button from "./Components/Button";
+import FormAddFriend from "./Components/FormAddFriend";
+import FormSplitBill from "./Components/FormSplitBill";
+import FriendsList from "./Components/FriendsList";
+import { useState } from "react";
+import InitialFriends from "./Components/Data";
 
-function App() {
+const App = () => {
+  const [displayAddFriend, setDisplayAddFriend] = useState(false);
+  const [selectedFriend, setSelectedFriend] = useState([]);
+  const [listOfFriend, setListOfFriend] = useState(InitialFriends);
+  const handleAddFriend = () => {
+    setDisplayAddFriend((prev) => !prev);
+    console.log(displayAddFriend);
+  };
+  const newFriend = (friend) => {
+    setListOfFriend((prev) => [...prev, friend]);
+  };
+  const handleSelection = (friend) => {
+    setSelectedFriend({ ...friend });
+  };
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div className="app">
+      <div className="sidebar">
+        <FriendsList
+          listOfFriend={listOfFriend}
+          onSelection={handleSelection}
+          selectedFriend={selectedFriend}
+        />
+        {displayAddFriend && (
+          <FormAddFriend
+            onAddNewfriend={newFriend}
+            onDisplayAddFriend={setDisplayAddFriend}
+          />
+        )}
+        <Button onClick={handleAddFriend}>
+          {displayAddFriend ? "Close" : "Add friend "}
+        </Button>
+      </div>
+      {selectedFriend && <FormSplitBill selectedFriend={selectedFriend} />}
     </div>
   );
-}
+};
 
 export default App;
